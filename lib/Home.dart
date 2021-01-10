@@ -1,10 +1,21 @@
+import 'package:do_together/empty_list.dart';
+import 'package:do_together/task.dart';
+import 'package:do_together/task_data.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'AddTaskPage.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    List<Task>_tasks = Provider.of<TaskData>(context).getTasks();
     return Scaffold(
       backgroundColor: Colors.white38,
       appBar: AppBar(
@@ -14,7 +25,7 @@ class Home extends StatelessWidget {
               children: <Widget>[
                 // Stroked text as border.
                 Text(
-                  'D0 Together',
+                  'Do Together',
                   style: TextStyle(
                     fontSize: 40,
                     foreground: Paint()
@@ -35,64 +46,15 @@ class Home extends StatelessWidget {
             )
             ),
       ),
-      body: Center(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              SizedBox(
-                height: 40.0,
-              ),
-              // Container(
-              //   height: 80.0,
-              //   width: 200.0,
-              //   color: Colors.blueGrey,
-              //   child: Center(
-              //     child: Text(
-              //       'TASK',
-              //       style: TextStyle(
-              //         fontWeight: FontWeight.bold,
-              //         fontStyle: FontStyle.normal,
-              //         color: Colors.white.withOpacity(1.0),
-              //         //height: 2.0,
-              //         fontSize: 40.0,
-              //       ),
-              //       //style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.2),
-              //     ),
-              //   ),
-              // ),
-              new Container(
-                height: 100.0,
-                width: 200.0,
-                color: Colors.transparent,
-                child: new Container(
-                    decoration: new BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: new BorderRadius.only(
-                          topLeft: const Radius.circular(40.0),
-                          topRight: const Radius.circular(40.0),
-                          bottomRight: const Radius.circular(40.0),
-                          bottomLeft: const Radius.circular(40.0),
-
-                        )
-                    ),
-                    child: new Center(
-                      child: new Text(
-                        'TASK',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.normal,
-                          color: Colors.white.withOpacity(1.0),
-                          //height: 2.0,
-                          fontSize: 40.0,
-                        ),
-                        //style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.2),
-                      ),
-                    )
-                ),
-              ),
-            ],
-          ),
+      body: Container(
+        child: _tasks.isEmpty?EmptyList():ListView.builder(
+          itemCount: _tasks.length,
+          itemBuilder: (context,index){
+            return ListTile(
+              title: Text(_tasks[index].taskName),
+              subtitle: Text(_tasks[index].taskDescription),
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -106,6 +68,10 @@ class Home extends StatelessWidget {
     );
   }
 }
+//
+
+
+
 // Text(
 // 'Greetings, planet!',
 // style: TextStyle(
@@ -121,3 +87,22 @@ class Home extends StatelessWidget {
 // )
 // ),
 // )
+
+// Container(
+//   height: 80.0,
+//   width: 200.0,
+//   color: Colors.blueGrey,
+//   child: Center(
+//     child: Text(
+//       'TASK',
+//       style: TextStyle(
+//         fontWeight: FontWeight.bold,
+//         fontStyle: FontStyle.normal,
+//         color: Colors.white.withOpacity(1.0),
+//         //height: 2.0,
+//         fontSize: 40.0,
+//       ),
+//       //style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.2),
+//     ),
+//   ),
+// ),

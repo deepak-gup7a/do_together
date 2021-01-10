@@ -1,4 +1,7 @@
+import 'package:do_together/task.dart';
+import 'package:do_together/task_data.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddTaskForm extends StatefulWidget {
   @override
@@ -7,7 +10,8 @@ class AddTaskForm extends StatefulWidget {
 
 class _AddTaskFormState extends State<AddTaskForm> {
   final _formKey = GlobalKey<FormState>();
-
+  TextEditingController _taskNameController = TextEditingController();
+  TextEditingController _taskDescriptionController = TextEditingController();
 
   String _date = "12/12/1212";
   String _time="09:09";
@@ -41,6 +45,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
           child: Column(
             children: [
               TextFormField(
+                controller: _taskNameController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
@@ -57,6 +62,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
               ),
               SizedBox(height: 20.0,),
               TextFormField(
+                controller: _taskDescriptionController,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
@@ -91,6 +97,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 child: Text("Save"),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
+                    Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,DateTime.now(),true,DateTime.now()));
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text("Processing")));
                     Navigator.pop(context);
@@ -101,6 +108,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
           ),
         ),
       ),
-    ));
+    ),
+    );
   }
 }
