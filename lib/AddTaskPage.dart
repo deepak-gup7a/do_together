@@ -37,7 +37,8 @@ class _AddTaskFormState extends State<AddTaskForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+      backgroundColor: Colors.white38,
+      body: SafeArea(
       child: Container(
         padding: EdgeInsets.all(20.0),
         child: Form(
@@ -46,10 +47,13 @@ class _AddTaskFormState extends State<AddTaskForm> {
             children: [
               TextFormField(
                 controller: _taskNameController,
+            //    style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
+                  hintStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.white),
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.text_fields),
+                  prefixIcon: Icon(Icons.text_fields, color: Colors.white,),
                   labelText: "Task",
                   hintText: "Task Name",
                 ),
@@ -64,9 +68,11 @@ class _AddTaskFormState extends State<AddTaskForm> {
               TextFormField(
                 controller: _taskDescriptionController,
                 decoration: InputDecoration(
+                  hintStyle: TextStyle(color: Colors.white),
+                  labelStyle: TextStyle(color: Colors.white),
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.text_fields),
+                  prefixIcon: Icon(Icons.text_fields, color: Colors.white,),
                   labelText: "Task",
                   hintText: "Task Description",
                 ),
@@ -80,21 +86,31 @@ class _AddTaskFormState extends State<AddTaskForm> {
               Container(
                 child: Row(
                   children: [
-                    IconButton(icon: Icon(Icons.date_range), onPressed:()=>getDate()),
-                    Text(_date),
+                    IconButton(icon: Icon(Icons.date_range), onPressed:()=>getDate(), color: Colors.white,),
+                    Text(
+                        _date,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
               Container(
                 child: Row(
                   children: [
-                    IconButton(icon: Icon(Icons.timer_sharp), onPressed:()=>getTime()),
-                    Text(_time),
+                    IconButton(icon: Icon(Icons.timer_sharp), onPressed:()=>getTime(), color: Colors.white,),
+                    Text(_time, style: TextStyle(color: Colors.white),),
                   ],
                 ),
               ),
               MaterialButton(
-                child: Text("Save"),
+                color: Colors.black12,
+                height: 50.0,
+                minWidth: 200.0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                elevation: 5.0,
+                child: Text("Save",
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,DateTime.now(),true,DateTime.now()));
