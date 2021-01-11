@@ -1,5 +1,7 @@
-import 'package:do_together/task.dart';
-import 'package:do_together/task_data.dart';
+
+import 'package:do_together/models/task.dart';
+import 'package:do_together/models/task_data.dart';
+import 'package:do_together/utills/TimeDate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,17 +12,18 @@ class AddTaskForm extends StatefulWidget {
 
 class _AddTaskFormState extends State<AddTaskForm> {
   final _formKey = GlobalKey<FormState>();
+  bool isRemind = false;
   TextEditingController _taskNameController = TextEditingController();
   TextEditingController _taskDescriptionController = TextEditingController();
 
-  String _date = "12/12/1212";
-  String _time="09:09";
+  DateTime _date = DateTime.now();
+  DateTime _time= DateTime.now();
 
   Future<void>getDate()async{
     final DateTime picked= await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2030));
     if(picked!=null){
       setState(() {
-        _date = picked.day.toString()+"/"+picked.month.toString()+"/"+picked.year.toString();
+        _date = picked;
       });
     }
   }
@@ -29,7 +32,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
     final TimeOfDay picked = await showTimePicker(context: context, initialTime:TimeOfDay(hour: 00, minute: 00));
     if(picked!=null){
       setState(() {
-        _time = picked.hour.toString()+":"+picked.minute.toString();
+        _time = TimeDate().timeOfDayToDateTime(picked);
       });
     }
   }
@@ -88,7 +91,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                   children: [
                     IconButton(icon: Icon(Icons.date_range), onPressed:()=>getDate(), color: Colors.white,),
                     Text(
-                        _date,
+                        TimeDate().getDateFromDateTime(_date),
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -98,10 +101,16 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 child: Row(
                   children: [
                     IconButton(icon: Icon(Icons.timer_sharp), onPressed:()=>getTime(), color: Colors.white,),
-                    Text(_time, style: TextStyle(color: Colors.white),),
+                    Text(TimeDate().getTimeFromDateTime(_time), style: TextStyle(color: Colors.white),),
                   ],
                 ),
               ),
+              Switch(value: isRemind, onChanged: (ch){
+                setState(() {
+                  isRemind = ch;
+                  print(isRemind);
+                });
+              }),
               MaterialButton(
                 color: Colors.black12,
                 height: 50.0,
@@ -113,9 +122,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,DateTime.now(),true,DateTime.now()));
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text("Processing")));
+                    Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,_date,isRemind,_time));
                     Navigator.pop(context);
                   }
                 },

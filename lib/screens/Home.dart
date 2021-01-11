@@ -1,10 +1,11 @@
-import 'package:do_together/empty_list.dart';
-import 'package:do_together/task.dart';
-import 'package:do_together/task_data.dart';
+import 'package:do_together/models/task.dart';
+import 'package:do_together/models/task_data.dart';
+import 'package:do_together/screens/task_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'AddTaskPage.dart';
+import 'empty_list_page.dart';
 
 class Home extends StatefulWidget {
 
@@ -13,9 +14,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   @override
   Widget build(BuildContext context) {
-    List<Task>_tasks = Provider.of<TaskData>(context).getTasks();
+
+    Provider.of<TaskData>(context).fetchTaskFromDatabase();
+    int taskListLength = Provider.of<TaskData>(context).getTaskCount();
+
     return Scaffold(
       backgroundColor: Colors.white38,
       appBar: AppBar(
@@ -47,15 +53,7 @@ class _HomeState extends State<Home> {
             ),
       ),
       body: Container(
-        child: _tasks.isEmpty?EmptyList():ListView.builder(
-          itemCount: _tasks.length,
-          itemBuilder: (context,index){
-            return ListTile(
-              title: Text(_tasks[index].taskName),
-              subtitle: Text(_tasks[index].taskDescription),
-            );
-          },
-        ),
+        child: taskListLength == 0?EmptyList():TaskListPage(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

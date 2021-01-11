@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Task{
 
   String _taskName;
@@ -18,7 +20,7 @@ class Task{
 
   String get taskName => _taskName;
 
-  bool get remidOrNot => _isRemind;
+  bool get remindOrNot => _isRemind;
 
   //setters
   set remindTime(DateTime value) {
@@ -39,5 +41,14 @@ class Task{
 
   set isRemind(bool value) {
     _isRemind = value;
+  }
+  Map<String,dynamic>toMap(){
+    return {
+      "taskname":_taskName,
+      "taskdescription":_taskDescription,
+      "taskdeadline":_taskDeadline.toIso8601String(),
+      "isremind":(_isRemind==true)?1:0,
+      "remindtime":_remindTime.toIso8601String()
+    };
   }
 }

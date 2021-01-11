@@ -1,6 +1,6 @@
 import 'dart:collection';
-
-import 'package:do_together/task.dart';
+import 'package:do_together/database/DatabaseHelper.dart';
+import 'package:do_together/models/task.dart';
 import 'package:flutter/material.dart';
 
 class TaskData extends ChangeNotifier{
@@ -8,11 +8,25 @@ class TaskData extends ChangeNotifier{
 
   int getTaskCount()=>_tasks.length;
 
+
+  Future<void> fetchTaskFromDatabase() async{
+    DatabaseHelper db = DatabaseHelper();
+    _tasks = await db.getTaskFromDatabase();
+    if(_tasks != null)
+      notifyListeners();
+  }
+
   UnmodifiableListView<Task>getTasks(){
     return UnmodifiableListView(_tasks);
   }
 
+  Future<void>addInDatabase(Task task)async{
+    DatabaseHelper db = DatabaseHelper();
+    await db.insertTaskInDatabase(task);
+  }
+
   void addTask(Task task){
+    addInDatabase(task);
     _tasks.add(task);
     notifyListeners();
   }
