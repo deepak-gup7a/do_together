@@ -40,16 +40,23 @@ class _AddTaskFormState extends State<AddTaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white38,
-      body: SafeArea(
-      child: Center(
+    return Center(
         child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black87,
+          borderRadius: new BorderRadius.only(
+          topLeft: const Radius.circular(40.0),
+          topRight: const Radius.circular(40.0),
+         // bottomRight: const Radius.circular(40.0),
+         // bottomLeft: const Radius.circular(40.0),
+
+          ),),
+          //color: Colors.black87,
           padding: EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
+           //   mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
                   controller: _taskNameController,
@@ -134,8 +141,6 @@ class _AddTaskFormState extends State<AddTaskForm> {
             ),
           ),
         ),
-      ),
-    ),
-    );
+      );
   }
 }
