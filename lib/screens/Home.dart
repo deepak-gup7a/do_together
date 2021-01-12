@@ -1,4 +1,3 @@
-import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
 import 'package:do_together/screens/task_list_page.dart';
 import 'package:flutter/material.dart';
@@ -25,34 +24,33 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white38,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.black12,
-        title: Center(
-            child: Stack(
-              children: <Widget>[
-                // Stroked text as border.
-                Text(
-                  'Do Together',
-                  style: TextStyle(
-                    fontSize: 40,
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 3
-                      ..color = Colors.blue[700],
-                  ),
-                ),
-                // Solid text as fill.
-                Text(
-                  'Do Together',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.grey[300],
-                  ),
-                ),
-              ],
-            )
+        toolbarHeight: 75.0,
+        title: Stack(
+          children: <Widget>[
+            Text(
+              'Do Together',
+              style: TextStyle(
+                fontSize: 40,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 3
+                  ..color = Colors.blue[700],
+              ),
             ),
+            Text(
+              'Do Together',
+              style: TextStyle(
+                fontSize: 40,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
+        ),
       ),
       body: Container(
+        color: Colors.black87,
         child: taskListLength == 0?EmptyList():TaskListPage(),
       ),
       floatingActionButton: FloatingActionButton(

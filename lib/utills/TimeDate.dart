@@ -8,9 +8,8 @@ class TimeDate{
     return time.hour.toString()+":"+time.minute.toString();
   }
 
-  DateTime timeOfDayToDateTime(TimeOfDay time){
-    DateTime temp = DateTime.now();
-    return DateTime(temp.year,temp.month,temp.hour,time.hour,time.minute);
+  DateTime timeOfDayToDateTime(DateTime date,TimeOfDay time){
+    return DateTime(date.year,date.month,date.hour,time.hour,time.minute);
   }
 
   TimeOfDay dateTimeToTimeOfDate(DateTime time){

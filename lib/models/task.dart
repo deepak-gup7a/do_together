@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Task{
 
@@ -6,13 +5,12 @@ class Task{
   String _taskDescription;
   DateTime _taskDeadline;
   bool _isRemind;
-  DateTime _remindTime;
+  bool _isDone;
 
   //constructor
-  Task(this._taskName, this._taskDescription, this._taskDeadline, this._isRemind, this._remindTime);
+  Task(this._taskName, this._taskDescription, this._taskDeadline, this._isRemind,this._isDone);
 
   //getters
-  DateTime get remindTime => _remindTime;
 
   DateTime get taskDeadline => _taskDeadline;
 
@@ -22,11 +20,9 @@ class Task{
 
   bool get remindOrNot => _isRemind;
 
-  //setters
-  set remindTime(DateTime value) {
-    _remindTime = value;
-  }
+  bool get isDone => _isDone;
 
+  //setters
   set taskDeadline(DateTime value) {
     _taskDeadline = value;
   }
@@ -42,13 +38,18 @@ class Task{
   set isRemind(bool value) {
     _isRemind = value;
   }
+
+  set isDone(bool value){
+    _isDone = value;
+  }
+
   Map<String,dynamic>toMap(){
     return {
       "taskname":_taskName,
       "taskdescription":_taskDescription,
       "taskdeadline":_taskDeadline.toIso8601String(),
       "isremind":(_isRemind==true)?1:0,
-      "remindtime":_remindTime.toIso8601String()
+      "isdone":(_isDone==true)?1:0
     };
   }
 }

@@ -2,6 +2,7 @@
 import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
 import 'package:do_together/utills/TimeDate.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +12,11 @@ class AddTaskForm extends StatefulWidget {
 }
 
 class _AddTaskFormState extends State<AddTaskForm> {
+
   final _formKey = GlobalKey<FormState>();
   bool isRemind = false;
   TextEditingController _taskNameController = TextEditingController();
   TextEditingController _taskDescriptionController = TextEditingController();
-
-  DateTime _date = DateTime.now();
   DateTime _time= DateTime.now();
   TimeDate timeDate = TimeDate();
 
@@ -24,7 +24,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
     final DateTime picked= await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2030));
     if(picked!=null){
       setState(() {
-        _date = picked;
+        _time = picked;
       });
     }
   }
@@ -33,7 +33,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
     final TimeOfDay picked = await showTimePicker(context: context, initialTime: timeDate.dateTimeToTimeOfDate(_time));
     if(picked!=null){
       setState(() {
-        _time = timeDate.timeOfDayToDateTime(picked);
+        _time = timeDate.timeOfDayToDateTime(_time,picked);
       });
     }
   }
@@ -49,10 +49,10 @@ class _AddTaskFormState extends State<AddTaskForm> {
           child: Form(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
                   controller: _taskNameController,
-              //    style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintStyle: TextStyle(color: Colors.white),
                     labelStyle: TextStyle(color: Colors.white),
@@ -77,23 +77,18 @@ class _AddTaskFormState extends State<AddTaskForm> {
                     labelStyle: TextStyle(color: Colors.white),
                     contentPadding: EdgeInsets.all(20.0),
                     border: OutlineInputBorder(),
+                    isDense: false,
                     prefixIcon: Icon(Icons.text_fields, color: Colors.white,),
-                    labelText: "Task",
+                    labelText: "Task Description (optional)",
                     hintText: "Task Description",
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter Task description';
-                    }
-                    return null;
-                  },
                 ),
                 Container(
                   child: Row(
                     children: [
                       IconButton(icon: Icon(Icons.date_range), onPressed:()=>getDate(), color: Colors.white,),
                       Text(
-                          timeDate.getDateFromDateTime(_date),
+                          timeDate.getDateFromDateTime(_time),
                         style: TextStyle(color: Colors.white),
                       ),
                     ],
@@ -107,12 +102,18 @@ class _AddTaskFormState extends State<AddTaskForm> {
                     ],
                   ),
                 ),
-                Switch(value: isRemind, onChanged: (ch){
-                  setState(() {
-                    isRemind = ch;
-                    print(isRemind);
-                  });
-                }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Pin Notification",style: TextStyle(color: Colors.white),),
+                    SizedBox(width: 15.0,),
+                    Switch(value: isRemind, onChanged: (ch){
+                      setState(() {
+                        isRemind = ch;
+                      });
+                    }),
+                  ],
+                ),
                 MaterialButton(
                   color: Colors.black12,
                   height: 50.0,
@@ -124,7 +125,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,_date,isRemind,_time));
+                      Provider.of<TaskData>(context,listen: false).addTask(Task(_taskNameController.text,_taskDescriptionController.text,_time,isRemind,false));
                       Navigator.pop(context);
                     }
                   },
