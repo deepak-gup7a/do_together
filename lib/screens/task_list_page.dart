@@ -18,7 +18,7 @@ class _TaskListPageState extends State<TaskListPage> {
     List<Task>_tasks = Provider.of<TaskData>(context).getTasks();
     bool isDone = false;
 
-    return Column(
+    return ListView(
       children: [
         Container(
           margin: EdgeInsets.symmetric(horizontal: 25.0,vertical: 15.00),
@@ -33,6 +33,7 @@ class _TaskListPageState extends State<TaskListPage> {
         ),
         Container(
         child: ListView.builder(
+          physics: ScrollPhysics(),
           shrinkWrap: true,
           itemCount: _tasks.length,
           itemBuilder: (context,index){
