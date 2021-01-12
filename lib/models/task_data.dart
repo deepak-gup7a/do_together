@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 class TaskData extends ChangeNotifier{
   List<Task>_tasks = [];
 
-  int getTaskCount()=>_tasks.length;
+  int getTaskCount(){
+    if(_tasks!=null)
+      return _tasks.length;
+    return 0;
+  }
 
 
   Future<void> fetchTaskFromDatabase() async{

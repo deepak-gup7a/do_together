@@ -13,4 +13,8 @@ class TimeDate{
     return DateTime(temp.year,temp.month,temp.hour,time.hour,time.minute);
   }
 
+  TimeOfDay dateTimeToTimeOfDate(DateTime time){
+    return TimeOfDay(hour: time.hour, minute: time.minute);
+  }
+
 }

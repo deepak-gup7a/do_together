@@ -15,12 +15,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-
   @override
   Widget build(BuildContext context) {
 
-    Provider.of<TaskData>(context).fetchTaskFromDatabase();
     int taskListLength = Provider.of<TaskData>(context).getTaskCount();
+    if(taskListLength == 0)
+    Provider.of<TaskData>(context).fetchTaskFromDatabase();
 
     return Scaffold(
       backgroundColor: Colors.white38,
