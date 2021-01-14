@@ -49,7 +49,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 trailing: IconButton(icon: Icon(Icons.more_vert,)
                   ,tooltip: "more options",
                 onPressed: (){
-
+                    Provider.of<TaskData>(context, listen: false).deleteTask(_tasks[index]);
                 },),
                 leading: Checkbox(value: isDone, onChanged: (bool value) {
                   setState(() {

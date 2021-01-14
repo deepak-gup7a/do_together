@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.do_together">
    <application
-        android:label="do_together"
+        android:label="Do Together"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
