@@ -38,8 +38,13 @@ class TaskData extends ChangeNotifier{
   void updateTask(){
     //update task
   }
+  Future<void>removeTaskFromDataBase(Task task)async{
+    DatabaseHelper db = DatabaseHelper();
+    await db.deleteTaskFromDataBase(task);
+  }
 
   void deleteTask(Task task){
+    removeTaskFromDataBase(task);
     _tasks.remove(task);
     notifyListeners();
   }
