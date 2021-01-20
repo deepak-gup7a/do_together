@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (BuildContext context)=>TaskData(),
       child: MaterialApp(
-          theme: ThemeData(
-            //primarySwatch: Colors.black87,
-            bottomSheetTheme: BottomSheetThemeData(
-                backgroundColor: Colors.black.withOpacity(0)),
-          ),
-       // theme: ThemeData.dark(),
+          // theme: ThemeData(
+          //   //primarySwatch: Colors.black87,
+          //   bottomSheetTheme: BottomSheetThemeData(
+          //       backgroundColor: Colors.black.withOpacity(0)),
+          // ),
+        theme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
         home: Home()
       ),

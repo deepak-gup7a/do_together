@@ -1,10 +1,12 @@
+import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
+import 'package:do_together/screens/done_task_page.dart';
+import 'package:do_together/screens/overdue_task_page.dart';
 import 'package:do_together/screens/task_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'AddTaskPage.dart';
-import 'empty_list_page.dart';
+import 'task_list_page.dart';
 
 class Home extends StatefulWidget {
 
@@ -16,16 +18,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
-    int taskListLength = Provider.of<TaskData>(context).getTaskCount();
-    if(taskListLength == 0)
-    Provider.of<TaskData>(context).fetchTaskFromDatabase();
-
+    int overdueTaskCount = Provider.of<TaskData>(context).getOverdueTaskCount();
+    int doneTaskCount = Provider.of<TaskData>(context).getDoneTaskCount();
     return Scaffold(
-      backgroundColor: Colors.white38,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.black12,
+       // backgroundColor: Colors.black12,
         toolbarHeight: 75.0,
         title: Stack(
           children: <Widget>[
@@ -50,57 +48,42 @@ class _HomeState extends State<Home> {
         ),
       ),
       body: Container(
-        color: Colors.black87,
-        child: taskListLength == 0?EmptyList():TaskListPage(),
+       // color: Colors.black87,
+        //child: taskListLength == 0?EmptyList():TaskListPage(),
+        child: TaskListPage(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
               context: context,
-              builder: (context) => AddTaskForm(),
+              builder: (context) => AddTaskForm(task:Task("","",DateTime.now(),false,false),forUpdate: false,),
           );
           }
-          )
+          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        notchMargin: 6.0,
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MaterialButton(onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OverDueTaskPage())) ;
+            },child: Text("Overdue : ${overdueTaskCount}",style: TextStyle(fontSize:20.0,color: Colors.redAccent),),),
+            MaterialButton(onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DoneTaskPage()));
+            },child: Text("Done : ${doneTaskCount}",style: TextStyle(fontSize:20.0,color: Colors.greenAccent),),)
+          ],
+        ),
+      ),
     );
 
   }
 }
-//
-
-
-
-// Text(
-// 'Greetings, planet!',
-// style: TextStyle(
-// fontSize: 40,
-// foreground: Paint()
-// ..shader = ui.Gradient.linear(
-// const Offset(0, 20),
-// const Offset(150, 20),
-// <Color>[
-// Colors.red,
-// Colors.yellow,
-// ],
-// )
-// ),
-// )
-
-// Container(
-//   height: 80.0,
-//   width: 200.0,
-//   color: Colors.blueGrey,
-//   child: Center(
-//     child: Text(
-//       'TASK',
-//       style: TextStyle(
-//         fontWeight: FontWeight.bold,
-//         fontStyle: FontStyle.normal,
-//         color: Colors.white.withOpacity(1.0),
-//         //height: 2.0,
-//         fontSize: 40.0,
-//       ),
-//       //style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.2),
-//     ),
-//   ),
-// ),

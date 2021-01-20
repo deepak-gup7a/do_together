@@ -61,4 +61,15 @@ Future<void>insertTaskInDatabase(Task task)async{
     }
   }
 
+  Future<void>updateDatabase(Task oldTask,Task newTask){
+    Database db;
+    try{
+      db.update('TASK',newTask.toMap() ,where: 'taskname = ?',whereArgs: [oldTask.taskName]);
+    }catch(e){
+      print(e);
+    }finally{
+      db.close();
+    }
+  }
+
 }

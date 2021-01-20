@@ -9,11 +9,15 @@ class TimeDate{
   }
 
   DateTime timeOfDayToDateTime(DateTime date,TimeOfDay time){
-    return DateTime(date.year,date.month,date.hour,time.hour,time.minute);
+    return DateTime(date.year,date.month,date.day,time.hour,time.minute);
   }
 
   TimeOfDay dateTimeToTimeOfDate(DateTime time){
     return TimeOfDay(hour: time.hour, minute: time.minute);
+  }
+
+  DateTime dateTimeFromDateTime(DateTime time,DateTime picked){
+    return DateTime(picked.year,picked.month,picked.day,time.hour,time.minute);
   }
 
 }
