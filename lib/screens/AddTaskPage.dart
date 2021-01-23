@@ -2,10 +2,11 @@ import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
 import 'package:do_together/utills/TimeDate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class AddTaskForm extends StatefulWidget {
-  Task task = Task("", "", DateTime.now(), false, false);
+  Task task = Task("", "", DateTime.now(), 10, false);
   bool forUpdate = false;
   AddTaskForm({this.task,this.forUpdate});
 
@@ -49,30 +50,25 @@ class _AddTaskFormState extends State<AddTaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    List<Task> tasks = Provider.of<TaskData>(context).getAllTasks();
+    List<Task> tasks = Provider.of<TaskData>(context).getTasks();
     return Scaffold(
-      //backgroundColor: Colors.transparent,
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(30.0),
         child: Form(
           key: _formKey,
           child: ListView(
-            physics: ScrollPhysics(),
             children: [
               TextFormField(
-            //    style: TextStyle(color: Colors.white),
                 initialValue: widget.task.taskName,
                 onChanged: (value) {
                   tName = value;
                 },
+                textInputAction: TextInputAction.newline,
                 decoration: InputDecoration(
-                  // hintStyle: TextStyle(color: Colors.white),
-                  // labelStyle: TextStyle(color: Colors.white),
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(
                     Icons.text_fields,
-         //           color: Colors.white,
                   ),
                   labelText: "Task",
                   hintText: "Task Name",
@@ -95,19 +91,15 @@ class _AddTaskFormState extends State<AddTaskForm> {
               ),
               TextFormField(
                 initialValue: widget.task.taskDescription,
-          //      style: TextStyle(color: Colors.white),
                 onChanged: (value) {
                   tDesc = value;
                 },
                 decoration: InputDecoration(
-                  // hintStyle: TextStyle(color: Colors.white),
-                  // labelStyle: TextStyle(color: Colors.white),
                   contentPadding: EdgeInsets.all(20.0),
                   border: OutlineInputBorder(),
                   isDense: false,
                   prefixIcon: Icon(
                     Icons.text_fields,
-         //           color: Colors.white,
                   ),
                   labelText: "Task Description (optional)",
                   hintText: "Task Description",
@@ -119,11 +111,9 @@ class _AddTaskFormState extends State<AddTaskForm> {
                     IconButton(
                       icon: Icon(Icons.date_range),
                       onPressed: () => getDate(),
-         //             color: Colors.white,
                     ),
                     Text(
                       timeDate.getDateFromDateTime(dChange==false?widget.task.taskDeadline:_time),
-         //             style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
@@ -134,36 +124,14 @@ class _AddTaskFormState extends State<AddTaskForm> {
                     IconButton(
                       icon: Icon(Icons.timer_sharp),
                       onPressed: () => getTime(),
-         //             color: Colors.white,
                     ),
                     Text(
                       timeDate.getTimeFromDateTime(tChange==false?widget.task.taskDeadline:_time),
-       //                 style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Text(
-              //       "Pin Notification",
-              //       style: TextStyle(color: Colors.white),
-              //     ),
-              //     SizedBox(
-              //       width: 15.0,
-              //     ),
-              //     Switch(
-              //         value: isRemind||widget.task.remindOrNot,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             isRemind = value;
-              //           });
-              //         }),
-              //   ],
-              // ),
               MaterialButton(
-               // color: Colors.black12,
                 height: 50.0,
                 minWidth: 200.0,
                 shape: RoundedRectangleBorder(
@@ -171,7 +139,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 elevation: 5.0,
                 child: Text(
                   "Save",
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  style: TextStyle(fontSize: 20.0),
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
@@ -182,9 +150,9 @@ class _AddTaskFormState extends State<AddTaskForm> {
                       tDesc = widget.task.taskDescription;
                     }
                     if(widget.forUpdate == true){
-                      Provider.of<TaskData>(context,listen: false).updateTask(widget.task,Task(tName, tDesc, (dChange==true||tChange==true)?_time:widget.task.taskDeadline, isRemind, false));
+                      Provider.of<TaskData>(context,listen: false).updateTask(widget.task,Task(tName, tDesc, (dChange==true||tChange==true)?_time:widget.task.taskDeadline, 10, false));
                     }else{
-                      Provider.of<TaskData>(context, listen: false).addTask(Task(tName, tDesc, (dChange==true||tChange==true)?_time:widget.task.taskDeadline, isRemind, false));
+                      Provider.of<TaskData>(context, listen: false).addTask(Task(tName, tDesc, (dChange==true||tChange==true)?_time:widget.task.taskDeadline, 10, false));
                     }
                     Navigator.pop(context);
                   }

@@ -10,33 +10,20 @@ class TaskData extends ChangeNotifier{
   }
 
   List<Task>_tasks = [];
-  List<Task>_allTasks = [];
-  List<Task>_doneTasks = [];
-  List<Task>_overdueTasks = [];
 
   int getTaskCount() => _tasks.length;
-
-  int getAllTaskCount() => _allTasks.length;
-
-  int getDoneTaskCount() => _doneTasks.length;
-
-  int getOverdueTaskCount() => _overdueTasks.length;
 
 
   //fetching from database
   Future<void> fetchTaskFromDatabase() async{
     DatabaseHelper db = DatabaseHelper();
-    _allTasks = await db.getTaskFromDatabase();
-    if(_allTasks != null){
-      _allTasks.sort((a,b)=>a.taskDeadline.isAfter(b.taskDeadline)==true?1:0);
-      DateTime dateTime = DateTime.now();
-      for(Task task in _allTasks){
-        if(task.isDone == true){
-          _doneTasks.add(task);
-        }else{
-          if(task.taskDeadline.isBefore(dateTime)){
-            _overdueTasks.add(task);
-          }
+    _tasks = await db.getTaskFromDatabase();
+    if(_tasks != null){
+      _tasks.sort((a,b)=>a.taskDeadline.isAfter(b.taskDeadline)==true?1:0);
+      for(int i=0;i<_tasks.length;++i){
+        if(_tasks[i].isDone == true){
+          Task task = _tasks[i];
+          _tasks.removeAt(i);
           _tasks.add(task);
         }
       }
@@ -44,22 +31,10 @@ class TaskData extends ChangeNotifier{
     }
   }
 
-  //return all lists
   UnmodifiableListView<Task>getTasks(){
     return UnmodifiableListView(_tasks);
   }
 
-  UnmodifiableListView<Task>getAllTasks(){
-    return UnmodifiableListView(_allTasks);
-  }
-
-  UnmodifiableListView<Task>getDoneTasks(){
-    return UnmodifiableListView(_doneTasks);
-  }
-
-  UnmodifiableListView<Task>getOverdueTasks(){
-    return UnmodifiableListView(_overdueTasks);
-  }
 
   //add inn database
   Future<void>addInDatabase(Task task)async{
@@ -75,19 +50,13 @@ class TaskData extends ChangeNotifier{
         index=i;
       }
     }
-    if(index == -1){
+    if(index == -1 || task.isDone == true){
       index=_tasks.length;
     }
     _tasks.insert(index,task);
-    _allTasks.add(task);
     notifyListeners();
   }
 
-
-  Future<void>updateInDatabase(Task oldTask,Task newTask)async{
-    DatabaseHelper db = DatabaseHelper();
-    await db.updateDatabase(oldTask, newTask);
-  }
 
   //update in database
   void updateTask(Task oldTask,Task newTask){
@@ -109,20 +78,17 @@ class TaskData extends ChangeNotifier{
   void deleteTask(Task task){
     removeTaskFromDataBase(task);
     _tasks.remove(task);
-    _allTasks.remove(task);
     notifyListeners();
   }
 
   void doneTask(Task task){
     for(int i=0;i<_tasks.length;++i){
       if(_tasks[i].taskName == task.taskName){
-        _tasks.removeAt(i);
+        deleteTask(task);
+        addTask(Task(task.taskName,task.taskDescription,task.taskDeadline,10,true));
         break;
       }
     }
-    _doneTasks.add(task);
-    deleteTask(Task(task.taskName,task.taskDescription,task.taskDeadline,false,task.remindOrNot));
-    addInDatabase(task);
     notifyListeners();
   }
 

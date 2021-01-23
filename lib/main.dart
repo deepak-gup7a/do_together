@@ -1,7 +1,11 @@
 import 'package:do_together/models/task_data.dart';
+import 'package:do_together/screens/AddTaskPage.dart';
+import 'package:do_together/screens/main_page.dart';
+import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'models/task.dart';
 import 'screens/Home.dart';
 
 void main() {
@@ -14,14 +18,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (BuildContext context)=>TaskData(),
       child: MaterialApp(
-          // theme: ThemeData(
-          //   //primarySwatch: Colors.black87,
-          //   bottomSheetTheme: BottomSheetThemeData(
-          //       backgroundColor: Colors.black.withOpacity(0)),
-          // ),
-        theme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
-        home: Home()
+        home:MainPage(),
       ),
     );
   }

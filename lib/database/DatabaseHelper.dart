@@ -8,7 +8,7 @@ class DatabaseHelper{
       join(await getDatabasesPath(),'do_together.db'),
       onCreate: (db,version){
         return db.execute(
-          "CREATE TABLE TASK(taskname TEXT,taskdescription TEXT,taskdeadline TEXT,isremind INTEGER,isdone INTEGER)",
+          "CREATE TABLE TASK(taskname TEXT,taskdescription TEXT,taskdeadline TEXT,beforeremind INTEGER,isdone INTEGER)",
         );
       },
       version: 1
@@ -36,7 +36,7 @@ Future<void>insertTaskInDatabase(Task task)async{
             maps[index]['taskname'],
             maps[index]['taskdescription'],
             DateTime.parse(maps[index]['taskdeadline']),
-            maps[index]['isremind']==0?false:true,
+            maps[index]['beforeremind'],
             maps[index]['isdone']==0?false:true
         );
       });
@@ -61,15 +61,5 @@ Future<void>insertTaskInDatabase(Task task)async{
     }
   }
 
-  Future<void>updateDatabase(Task oldTask,Task newTask){
-    Database db;
-    try{
-      db.update('TASK',newTask.toMap() ,where: 'taskname = ?',whereArgs: [oldTask.taskName]);
-    }catch(e){
-      print(e);
-    }finally{
-      db.close();
-    }
-  }
 
 }
