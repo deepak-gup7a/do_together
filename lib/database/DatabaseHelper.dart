@@ -8,7 +8,7 @@ class DatabaseHelper{
       join(await getDatabasesPath(),'do_together.db'),
       onCreate: (db,version){
         return db.execute(
-          "CREATE TABLE TASK(taskname TEXT,taskdescription TEXT,taskdeadline TEXT,beforeremind INTEGER,isdone INTEGER)",
+          "CREATE TABLE TASK(UID TEXT,taskname TEXT,taskdescription TEXT,isdone INTEGER)",
         );
       },
       version: 1
@@ -33,11 +33,10 @@ Future<void>insertTaskInDatabase(Task task)async{
       final List<Map<String,dynamic>> maps = await db.query('TASK');
       return List.generate(maps.length, (index)  {
         return Task(
+            maps[index]["UID"],
             maps[index]['taskname'],
             maps[index]['taskdescription'],
-            DateTime.parse(maps[index]['taskdeadline']),
-            maps[index]['beforeremind'],
-            maps[index]['isdone']==0?false:true
+            maps[index]['isdone']==0?false:true,
         );
       });
     }catch(e){
@@ -52,7 +51,7 @@ Future<void>insertTaskInDatabase(Task task)async{
     Database db;
     try{
       db = await createDatabase();
-      await db.rawDelete('DELETE FROM TASK WHERE taskname = ?',[task.taskName]);
+      await db.rawDelete('DELETE FROM TASK WHERE UID = ?',[task.UID]);
     }
     catch(e){
       print(e);
@@ -61,5 +60,16 @@ Future<void>insertTaskInDatabase(Task task)async{
     }
   }
 
+  Future<void>updateTaskInDatabase(Task task)async{
+    Database db;
+    try{
+      db = await createDatabase();
+      await db.update('TASK',task.toMap(),where: "UID = ?",whereArgs: [task.UID]);
+    }catch(e){
+      print(e);
+    }finally{
+      db.close();
+    }
+  }
 
 }

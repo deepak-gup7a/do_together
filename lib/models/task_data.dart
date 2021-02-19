@@ -16,17 +16,10 @@ class TaskData extends ChangeNotifier{
 
   //fetching from database
   Future<void> fetchTaskFromDatabase() async{
+    DateTime dt = DateTime.now();
     DatabaseHelper db = DatabaseHelper();
     _tasks = await db.getTaskFromDatabase();
     if(_tasks != null){
-      _tasks.sort((a,b)=>a.taskDeadline.isAfter(b.taskDeadline)==true?1:0);
-      for(int i=0;i<_tasks.length;++i){
-        if(_tasks[i].isDone == true){
-          Task task = _tasks[i];
-          _tasks.removeAt(i);
-          _tasks.add(task);
-        }
-      }
       notifyListeners();
     }
   }
@@ -42,31 +35,33 @@ class TaskData extends ChangeNotifier{
     await db.insertTaskInDatabase(task);
   }
 
+  void doneTask(Task task){
+    task.isDone = true;
+    updateTask(task);
+  }
+
   void addTask(Task task){
+    _tasks.add(task);
     addInDatabase(task);
-    int index=-1;
-    for(int i=0;i<_tasks.length;++i){
-      if(task.taskDeadline.isBefore(_tasks[i].taskDeadline)){
-        index=i;
-      }
-    }
-    if(index == -1 || task.isDone == true){
-      index=_tasks.length;
-    }
-    _tasks.insert(index,task);
     notifyListeners();
   }
 
 
   //update in database
-  void updateTask(Task oldTask,Task newTask){
-    deleteTask(oldTask);
-    addTask(newTask);
+  void updateTask(Task task){
     for(int i=0;i<_tasks.length;++i){
-      if(_tasks[i].taskName == oldTask.taskName){
-        _tasks[i] = newTask;
+      if(_tasks[i].UID == task.UID){
+        _tasks[i] = task;
+        break;
       }
     }
+    updateInDatabase(task);
+    notifyListeners();
+  }
+
+  Future<void>updateInDatabase(Task task)async{
+    DatabaseHelper db = DatabaseHelper();
+    await db.updateTaskInDatabase(task);
   }
 
   //delete from database
@@ -78,17 +73,6 @@ class TaskData extends ChangeNotifier{
   void deleteTask(Task task){
     removeTaskFromDataBase(task);
     _tasks.remove(task);
-    notifyListeners();
-  }
-
-  void doneTask(Task task){
-    for(int i=0;i<_tasks.length;++i){
-      if(_tasks[i].taskName == task.taskName){
-        deleteTask(task);
-        addTask(Task(task.taskName,task.taskDescription,task.taskDeadline,10,true));
-        break;
-      }
-    }
     notifyListeners();
   }
 

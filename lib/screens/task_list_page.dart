@@ -25,7 +25,6 @@ class _TaskListPageState extends State<TaskListPage> {
           return ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal:12.0,vertical: 8.0),
             dense: true,
-            enableFeedback: true,
             trailing: PopupMenuButton(
               tooltip: "more options",
               itemBuilder: (BuildContext pContext) {
@@ -110,7 +109,7 @@ class _TaskListPageState extends State<TaskListPage> {
                  // color: Colors.white,
                   fontSize: 24.0),
             ),
-            //subtitle: Text(_tasks[index].taskDescription),
+            subtitle: Text(_tasks[index].taskDescription),
           );
         },
       ),
