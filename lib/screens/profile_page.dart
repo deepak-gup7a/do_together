@@ -1,4 +1,6 @@
+import 'package:do_together/services/Authservice.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -6,7 +8,10 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text("user profile"),
+          child: MaterialButton(child: Text("Log out"),
+              onPressed: (){
+            context.read<AuthService>().signOut();
+          },),
         ),
       ),
     );
