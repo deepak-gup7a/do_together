@@ -1,40 +1,46 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
 
 class AuthService {
 
-  final FirebaseAuth _firebaseAuth;
-
-  AuthService(this._firebaseAuth);
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  // AuthService(this._firebaseAuth);
 
   Stream<User>get authChange => _firebaseAuth.authStateChanges();
 
-  Future<String>signOut()async{
+  Future signOut()async{
     try{
-      await _firebaseAuth.signOut();
-      return "sign out";
-    }on FirebaseAuthException catch (e){
-      return e.message;
+      return await _firebaseAuth.signOut();
+    }catch (e){
+      print(e.toString());
+      return null;
     }
   }
 
-  Future<String>signIn({String email,String pass})async{
+  Future signIn({String email,String pass})async{
     try{
-      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: pass);
-      return "sign in";
+      UserCredential userCred =  await _firebaseAuth.signInWithEmailAndPassword(email: email, password: pass);
+      User user = userCred.user;
+      print(user);
+      return user;
     }catch(e){
-      return e.toString();
+      print(e.toString());
+      return null;
     }
 
   }
 
-  Future<String>signUp({String email,String pass})async{
+  Future signUp({String email,String pass})async{
     try{
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
-      return "Sign up";
+      UserCredential userCred =  await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
+      User user = userCred.user;
+      if(user.emailVerified==false){
+        await user.sendEmailVerification();
+      }
+      print(user);
+      return user;
     }on FirebaseAuthException catch(e){
-      return e.message;
+      print(e.toString());
+      return null;
     }
   }
 

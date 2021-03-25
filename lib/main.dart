@@ -2,6 +2,7 @@ import 'package:do_together/models/task_data.dart';
 import 'package:do_together/screens/AddTaskPage.dart';
 import 'package:do_together/screens/login_page.dart';
 import 'package:do_together/screens/main_page.dart';
+import 'package:do_together/screens/sign_up_page.dart';
 import 'package:do_together/services/Authservice.dart';
 import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'models/task.dart';
 import 'screens/Home.dart';
+import 'screens/login_page.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,10 +27,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create:(_)=>TaskData() ),
-        Provider(create: (_)=>AuthService(FirebaseAuth.instance)),
-        StreamProvider(create: (context)=>context.read<AuthService>().authChange)
-      ], 
+        StreamProvider<User>.value(value:AuthService().authChange)
+      ],
       child: MaterialApp(
+        theme: ThemeData().copyWith(
+          primaryColor: Colors.blueGrey,
+        ),
         debugShowCheckedModeBanner: false,
         home:AuthenticationWrapper(),
       ),
@@ -37,13 +41,27 @@ class MyApp extends StatelessWidget {
 }
 
 
-class AuthenticationWrapper extends StatelessWidget {
+class AuthenticationWrapper extends StatefulWidget {
+
+  @override
+  _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
+}
+
+class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  bool showSignup = true;
+
+  void toggleView(){
+    setState(() {
+      showSignup = !showSignup;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
+    final firebaseUser = Provider.of<User>(context);
     if(firebaseUser != null){
       return MainPage();
     }
-    return LoginPage();
+    return showSignup? SignupPage(tv:toggleView):LoginPage(tv:toggleView);
   }
 }

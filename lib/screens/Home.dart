@@ -17,8 +17,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  List<String>months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
   @override
   Widget build(BuildContext context) {
+    DateTime currentDateTime = DateTime.now();
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -43,8 +46,8 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(margin:EdgeInsets.all(20.0),child: Text("January 2021",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
-              Container(margin:EdgeInsets.symmetric(horizontal: 20.0),child: Text("Today's To-Do ",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold),),),
+              Container(margin:EdgeInsets.all(20.0),child: Text("${months[currentDateTime.month-1]}",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,),)),
+              Container(margin:EdgeInsets.symmetric(horizontal: 20.0),child: Text("ToDo_s ",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),),),
               Container(margin: EdgeInsets.all(20.0),
               decoration: BoxDecoration(
                 boxShadow: [BoxShadow(color: Colors.grey)]

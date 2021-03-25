@@ -1,6 +1,5 @@
 import 'package:do_together/models/task.dart';
 import 'package:do_together/screens/profile_page.dart';
-import 'package:do_together/screens/statisticsPage.dart';
 import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:flutter/material.dart';
 import 'AddTaskPage.dart';
@@ -15,7 +14,6 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> tabPages = [
     Home(),
-    StatisticsPage(),
   ];
 
   int pageIndex=0;
@@ -36,15 +34,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        children: tabPages,
-        controller: _pageController,
-        onPageChanged: (index){
-          setState(() {
-            pageIndex = index;
-          });
-        },
-      ),
+      body: Home(),
       appBar: AppBar(
         leading: IconButton(
           onPressed: () async {
@@ -64,17 +54,6 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white70,
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.greenAccent,
-        unselectedItemColor: Colors.blueGrey,
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home,),label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.stacked_bar_chart), label:"Statistics"),
-        ],
-        currentIndex: pageIndex,
-        onTap: (index)=>this._pageController.animateToPage(index,duration:Duration(milliseconds: 500),curve: Curves.fastOutSlowIn),
-      ),
     );
   }
 }
