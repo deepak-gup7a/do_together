@@ -1,9 +1,6 @@
-class User{
-  String UID;
+class user{
+  String uid;
   String name;
-  String gmailId;
-
-  User(this.UID, this.name, this.gmailId);
-
-
+  String emailId;
+  user({this.uid, this.name, this.emailId});
 }

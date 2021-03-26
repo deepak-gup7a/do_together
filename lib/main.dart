@@ -1,23 +1,19 @@
 import 'package:do_together/models/task_data.dart';
-import 'package:do_together/screens/AddTaskPage.dart';
+import 'package:do_together/screens/Home.dart';
+import 'package:do_together/screens/email_verification_page.dart';
 import 'package:do_together/screens/login_page.dart';
 import 'package:do_together/screens/main_page.dart';
 import 'package:do_together/screens/sign_up_page.dart';
 import 'package:do_together/services/Authservice.dart';
-import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'models/task.dart';
-import 'screens/Home.dart';
 import 'screens/login_page.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
- // Provider.debugCheckInvalidValueType = null;
   runApp(MyApp());
 }
 
@@ -60,7 +56,10 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   Widget build(BuildContext context) {
     final firebaseUser = Provider.of<User>(context);
     if(firebaseUser != null){
-      return MainPage();
+      if(firebaseUser.emailVerified==true){
+        return MainPage();
+      }
+      return EmailVerificationPage();
     }
     return showSignup? SignupPage(tv:toggleView):LoginPage(tv:toggleView);
   }

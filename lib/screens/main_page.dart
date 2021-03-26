@@ -1,8 +1,7 @@
-import 'package:do_together/models/task.dart';
+import 'package:do_together/screens/notification_page.dart';
 import 'package:do_together/screens/profile_page.dart';
 import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:flutter/material.dart';
-import 'AddTaskPage.dart';
 import 'Home.dart';
 
 class MainPage extends StatefulWidget {
@@ -46,7 +45,9 @@ class _MainPageState extends State<MainPage> {
           icon: Icon(Icons.search,color: Colors.black87,),
         ),
         actions: [
-          Container(padding:EdgeInsets.symmetric(horizontal: 10.0),child: IconButton(icon: Icon(Icons.notifications,color: Colors.grey,),onPressed: (){},)),
+          Container(padding:EdgeInsets.symmetric(horizontal: 10.0),child: IconButton(icon: Icon(Icons.notifications,color: Colors.grey,),onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NotificationPage()));
+          },)),
           Container(padding:EdgeInsets.symmetric(horizontal: 10.0),child: IconButton(icon: Icon(Icons.person,color: Colors.grey,), onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ProfilePage()));
           },))

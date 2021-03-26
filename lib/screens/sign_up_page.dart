@@ -105,7 +105,7 @@ class _SignupPageState extends State<SignupPage> {
                           setState(() {
                             _loading = true;
                           });
-                          dynamic res = await AuthService().signUp(email: emailController.text,pass: passController.text);
+                          dynamic res = await AuthService().signUp(email: emailController.text,pass: passController.text,name: userNameController.text);
                           if(res==null){
                             setState(() {
                               _loading = false;
