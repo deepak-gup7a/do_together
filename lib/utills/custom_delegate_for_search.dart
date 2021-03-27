@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 
 class CustomDelegate<T> extends SearchDelegate<T> {
 
-  List<String> data = [];
+  List<String> data =[];
 
   @override
   List<Widget> buildActions(BuildContext context) => [IconButton(icon: Icon(Icons.clear), onPressed: () => query = '')];

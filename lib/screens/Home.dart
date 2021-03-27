@@ -2,6 +2,8 @@
 import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
 import 'package:do_together/screens/task_list_page.dart';
+import 'package:do_together/services/Authservice.dart';
+import 'package:do_together/services/database.dart';
 import 'package:do_together/utills/custom_delegate_for_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,11 +54,14 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 boxShadow: [BoxShadow(color: Colors.grey)]
               ),),
-              Expanded(child: SingleChildScrollView(
-                child: TaskListPage(),
-              ))
-          ]
+              Expanded(
+                  child: StreamProvider<List<Task>>.value(
+                      value: DatabaseService(uid: AuthService().getUserDetails().uid).task,
+                    child: TaskListPage(),
+              )
         ),
+      ]
+      )
       ),
     );
 

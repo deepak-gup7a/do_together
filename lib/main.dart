@@ -1,5 +1,4 @@
 import 'package:do_together/models/task_data.dart';
-import 'package:do_together/screens/Home.dart';
 import 'package:do_together/screens/email_verification_page.dart';
 import 'package:do_together/screens/login_page.dart';
 import 'package:do_together/screens/main_page.dart';

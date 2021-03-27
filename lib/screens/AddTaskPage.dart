@@ -1,5 +1,8 @@
+import 'package:do_together/models/User.dart';
 import 'package:do_together/models/task.dart';
 import 'package:do_together/models/task_data.dart';
+import 'package:do_together/services/Authservice.dart';
+import 'package:do_together/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +11,7 @@ class AddTaskForm extends StatefulWidget {
   _AddTaskFormState createState() => _AddTaskFormState();
 
   Task task = Task("01","","",false);
-  bool forUpdate = false;
+  bool forUpdate ;
 
   AddTaskForm({this.forUpdate,this.task});
 
@@ -16,88 +19,79 @@ class AddTaskForm extends StatefulWidget {
 
 class _AddTaskFormState extends State<AddTaskForm> {
 
-  String taskName = "",taskDes = "";
-
-
-  // Widget buildChip(String label,int index){
-  //   return InputChip(
-  //     onPressed: (){
-  //       setState(() {
-  //         selectedDays[index] = !selectedDays[index];
-  //       });
-  //     },
-  //     label: Text(label,style: TextStyle(color: Colors.black,),),
-  //     backgroundColor: selectedDays[index]?Colors.grey:Colors.grey[300],
-  //     shadowColor: Colors.grey,
-  //     padding: EdgeInsets.all(4.0),
-  //   );
-  // }
-
+  String taskName ,taskDes ;
+  final _formKey = GlobalKey<FormState>();
+  DateTime dt = DateTime.now();
+  user _user = AuthService().getUserDetails();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(12.0),
-        child: ListView(
-          physics: ScrollPhysics(),
-          children: [
-            Center(child: Text("Add Task "),heightFactor:3.0,),
-            TextFormField(
-              initialValue: widget.task.taskName,
-              maxLines: 1,
-              onChanged: (value){
-                setState(() {
-                  taskName = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: "Name @required",
-                labelText: "Task Name",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  gapPadding: 12.0,
-                )
-              ),
-            ),
-            SizedBox(height: 15.0,),
-            TextFormField(
-             initialValue: widget.task.taskDescription,
-              onChanged: (value){
-               taskDes = value;
-              },
-              decoration: InputDecoration(
-                  hintText: "optional",
-                  labelText: "Task Description",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    gapPadding: 12.0,
-                  )
-              ),
-            ),
-            Builder(
-              builder:(ctx)=> OutlinedButton(
-                child: Text("Save",),
-                  onPressed: () {
-                    if (taskName.isEmpty) {
-                      Scaffold.of(ctx).showSnackBar(
-                        SnackBar(
-                          content: Text("Task Name can't be Empty !"),),);
-                    }
-                    else {
-                      if(widget.forUpdate == true){
-                        Provider.of<TaskData>(context,listen: false).updateTask(Task(widget.task.UID,taskName,taskDes,false));
-                      }else{
-                        Provider.of<TaskData>(context,listen:false).addTask(Task(DateTime.now().toIso8601String(),taskName,taskDes,false));
-                      }
-                      Navigator.pop(context);
-                    }
-                  }
+    return Container(
+      height: 400.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: [
+                  SizedBox(height: 30.0,),
+                  TextFormField(
+                    initialValue: widget.task.taskName,
+                    validator: (val){
+                      if(val.isNotEmpty)
+                        return null;
+                      return "please add task name";
+                    },
+                    obscureText: false,
+                    onChanged: (val){
+                      setState(() {
+                        taskName = val;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        hintText: "Task name",
+                        isDense: false,
+
+                    ),
                   ),
-            )
-          ],
+                  SizedBox(height: 20.0,),
+                  TextFormField(
+                    initialValue: widget.task.taskDescription,
+                    obscureText: false,
+                    onChanged: (val){
+                      setState(() {
+                        taskDes = val;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        hintText: "Task description",
+                        isDense: false,
+
+                    ),
+                  ),
+                  SizedBox(height: 20.0,),
+                  // ignore: deprecated_member_use
+                  RaisedButton(
+                      child: Text("Save"),
+                      onPressed: ()async{
+                        if(_formKey.currentState.validate()){
+                          Navigator.pop(context);
+                          await DatabaseService(uid: _user.uid).updateUserTask(Task(
+                              widget.forUpdate?(widget.task.UID):_user.uid+dt.toIso8601String(),
+                              taskName??widget.task.taskName,
+                              taskDes??widget.task.taskDescription,
+                              false));
+                        }
+                      }
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
+
     );
   }
 }
